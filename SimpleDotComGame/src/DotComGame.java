@@ -1,20 +1,51 @@
+import java.util.Scanner;
+
 public class DotComGame {
     public static void main(String[] args) {
-        DotCom dot = new DotCom();
-        
-        int[] locations = {2,3,4};
-        dot.setLocationCells(locations);
-
-        String userGuess = "3";
-
-        //pass userGuess to checkYourself method, and assign returned value to result
-        String result = dot.checkYourself(userGuess);
-        
-        String testResult = "Failed";
-        if (result.equals("Hit")) {
-            testResult = "Passed";
+        for (char c : "Sink The Krait-MK2 in 5 guesses!\n\n".toCharArray()){
+            System.out.print(c);
+            try
+            {
+                Thread.sleep(75);
+            }
+            catch(InterruptedException ex)
+            {
+                Thread.currentThread().interrupt();
+            }
         }
-        System.out.println(testResult);
+        startGame();
+    }
+
+    public static void startGame() {
+        int loopit = 0;
+        while (loopit < 1) {
+            DotCom dot = new DotCom();
+
+            int x = (int) (Math.random() * (7 - 1) + 1) + 1;   //create random number in range of [1,7]
+            int[] locations = {x, x + 1, x + 2};
+            dot.setLocationCells(locations);
+
+            for (int count = 0; count < 5; ++count) {
+                //pass getGuess to checkYourself method, and assign returned value to result
+                String result = dot.checkYourself(dot.getGuess());
+
+                String testResult = "";
+                if (result.equals("Kill")) {
+                    testResult = "\nKrait-MK2 is destroyed. You've won!";
+                    System.out.println(testResult);
+                    break;
+                } else if (count == 4 && !(result.equals("Kill"))) {    //4 guesses made and sink hasn't sunk, you've lost
+                    testResult = "\nKrait-MK2 lives. You've lost!";
+                    System.out.println(testResult);
+                    break;
+                }
+            }
+            char z = dot.end();
+            if ((z != 'y') && (z != 'Y')) {
+                ++loopit;
+            }
+            System.out.print('\n');
+        }
     }
 }
 
@@ -47,5 +78,21 @@ class DotCom {
         }
         System.out.println(result);
         return result;
+    }
+
+    public static String getGuess() {
+        Scanner guess = new Scanner(System.in);
+        System.out.print("Enter a guess: ");
+        String userGuess = guess.nextLine();
+
+        return userGuess;
+    }
+
+    public static char end() {
+        Scanner endChoice = new Scanner(System.in);
+        System.out.print("\nEnter anything to end, 'y' to restart: ");
+        char choice = endChoice.next().charAt(0);
+
+        return choice;
     }
 }
