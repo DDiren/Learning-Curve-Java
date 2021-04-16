@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 public class DotComGame {
     public static void main(String[] args) {
+        System.out.println("Game size 1x7");
         for (char c : "Sink The Krait-MK2 in 5 guesses!\n\n".toCharArray()){
             System.out.print(c);
             try
@@ -21,7 +22,7 @@ public class DotComGame {
         while (loopit < 1) {
             DotCom dot = new DotCom();
 
-            int x = (int) (Math.random() * (7 - 1) + 1) + 1;   //create random number in range of [1,7]
+            int x = (int) (Math.random() * (5 - 1)+1) + 1;   //create random number in range of [1,7]
             int[] locations = {x, x + 1, x + 2};
             dot.setLocationCells(locations);
 
