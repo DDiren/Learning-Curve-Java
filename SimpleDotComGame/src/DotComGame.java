@@ -1,8 +1,11 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class DotComGame {
     public static void main(String[] args) {
-        System.out.println("Game size 1x7");
+        System.out.println("Game size 1x7, ship size 3");
+
+        //for cosmetic purposes, prints each character in the string one by one with 100ms intervals
         for (char c : "Sink The Krait-MK2 in 5 guesses!\n\n".toCharArray()){
             System.out.print(c);
             try
@@ -22,11 +25,21 @@ public class DotComGame {
         while (loopit < 1) {
             DotCom dot = new DotCom();
 
-            int x = (int) (Math.random() * (5 - 1)+1) + 1;   //create random number in range of [1,7]
-            int[] locations = {x, x + 1, x + 2};
-            dot.setLocationCells(locations);
+            int x = (int) (Math.random() * (5 - 1)+1) + 1;  //create random number in range of [1,5]
+
+            ArrayList<String> locations = new ArrayList<String>();
+
+            for (int ct = 0; ct < 3; ++ct){
+                String y = Integer.toString(x);     //conver random number to string
+                ++x;                                //add 1 to it
+                locations.add(y);                   //add it to locations array list
+            }   //do it 3 times since the size of the ship is 3
+
+
+            dot.setLocationCells(locations);    //send it as locations
 
             for (int count = 0; count < 5; ++count) {
+
                 //pass getGuess to checkYourself method, and assign returned value to result
                 String result = dot.checkYourself(dot.getGuess());
 
@@ -34,6 +47,7 @@ public class DotComGame {
                 if (result.equals("Kill")) {
                     testResult = "\nKrait-MK2 is destroyed. You've won!";
                     System.out.println(testResult);
+                    System.out.println("You took " + (count + 1) + " guesses.");
                     break;
                 } else if (count == 4 && !(result.equals("Kill"))) {    //4 guesses made and sink hasn't sunk, you've lost
                     testResult = "\nKrait-MK2 lives. You've lost!";
@@ -51,10 +65,9 @@ public class DotComGame {
 }
 
 class DotCom {
-    private int[] locationCells;
-    private int numOfHits = 0;  //initially no hits are made, so this is 0
+    private ArrayList<String> locationCells;
 
-    public void setLocationCells(int[] locs) {  //Setter to set locations to locationCells
+    public void setLocationCells(ArrayList<String> locs) {  //Setter to set locations parameter to locationCells
         locationCells = locs;
     }
     
@@ -63,20 +76,15 @@ class DotCom {
         int guess = Integer.parseInt(strGuess); //Convert string to integer
         String result = "Miss";
 
-        //Create a variable named cell Go through each element of the array locationCell
-        for (int cell : locationCells) {
-            if (guess == cell) {    //Check if user guess is the same as one of the array ellements
-                result = "Hit";     //if a mach is made, change result from Miss to Hit
-                numOfHits++;
-
-                break;
-            }
+        int index = locationCells.indexOf(strGuess);    //get the index of user guess
+        if (index >= 0) {   //if user guess not in the array list, -1
+            locationCells.remove(index);    //remove that element represented by index
+            result = "Hit";     //since input is in the list, might as well call it a hit
+        }
+        if (locationCells.isEmpty()) {
+            result = "Kill";    //if all elements are gone, then the ship is gone too
         }
 
-        //if the amount of hits accumulated is equal to the length of the location array, all the dots are hit
-        if (numOfHits == locationCells.length) {
-            result = "Kill";    //if so, the ship has sunk, change result to Kill
-        }
         System.out.println(result);
         return result;
     }
