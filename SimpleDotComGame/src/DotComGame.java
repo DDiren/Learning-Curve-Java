@@ -44,17 +44,23 @@ public class DotComGame {
                 String result = dot.checkYourself(dot.getGuess());
 
                 String testResult = "";
+
                 if (result.equals("Kill")) {
                     testResult = "\nKrait-MK2 is destroyed. You've won!";
                     System.out.println(testResult);
                     System.out.println("You took " + (count + 1) + " guesses.");
+
                     break;
-                } else if (count == 4 && !(result.equals("Kill"))) {    //4 guesses made and sink hasn't sunk, you've lost
+                } else if (count == 4 && !(result.equals("Kill"))) {    //4 guesses made and ship hasn't sunk, you've lost
                     testResult = "\nKrait-MK2 lives. You've lost!";
                     System.out.println(testResult);
+
                     break;
+                } else if (result.equals("This location was hit before.")) {
+                    --count;
                 }
             }
+
             char z = dot.end();
             if ((z != 'y') && (z != 'Y')) {
                 ++loopit;
@@ -66,21 +72,27 @@ public class DotComGame {
 
 class DotCom {
     private ArrayList<String> locationCells;
+    private ArrayList<String> removedDots = new ArrayList<String>();
 
     public void setLocationCells(ArrayList<String> locs) {  //Setter to set locations parameter to locationCells
         locationCells = locs;
     }
-    
+
     String checkYourself(String strGuess) {
 
-        int guess = Integer.parseInt(strGuess); //Convert string to integer
         String result = "Miss";
 
         int index = locationCells.indexOf(strGuess);    //get the index of user guess
+
         if (index >= 0) {   //if user guess not in the array list, -1
+            removedDots.add(locationCells.get(index));  //add the hit ellement to another array
             locationCells.remove(index);    //remove that element represented by index
-            result = "Hit";     //since input is in the list, might as well call it a hit
+            result = "Hit";     //since input is in the list, might as well call it a hit;
+
+        } else if (removedDots.contains(strGuess)) {    //if the previous location was hit, execute this
+            result = "This location was hit before.";   //these will not be counted as guesses
         }
+
         if (locationCells.isEmpty()) {
             result = "Kill";    //if all elements are gone, then the ship is gone too
         }
