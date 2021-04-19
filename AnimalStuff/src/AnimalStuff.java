@@ -7,34 +7,52 @@ public class AnimalStuff {
         Animal dog1 = new Dog();
         Animal dog2 = new Dog();
         Animal cat1 = new Cat();
+        Animal cat2 = new Cat();
+        Animal wolf1 = new Wolf();
+        Animal wolf2 = new Wolf();
         ArrayList<Animal> allAnimals = new ArrayList<Animal>();
+        ArrayList<Animal> dogs = new ArrayList<Animal>();
+        ArrayList<Animal> cats = new ArrayList<Animal>();
+        ArrayList<Animal> wolves = new ArrayList<Animal>();
         Comparison comp1 = new Comparison();
 
-        allAnimals.add(dog1);
-        allAnimals.add(dog2);
-        allAnimals.add(cat1);
+        dogs.add(dog1);
+        dogs.add(dog2);
+        cats.add(cat1);
+        cats.add(cat2);
+        wolves.add(wolf1);
+        wolves.add(wolf2);
+
+        allAnimals.addAll(dogs);
+        allAnimals.addAll(cats);
+        allAnimals.addAll(wolves);
 
         dog1.setTag(1);
         dog2.setTag(2);
         cat1.setTag(1);
+        cat2.setTag(2);
+        wolf1.setTag(1);
+        wolf2.setTag(2);
 
         String s = "";
         while (!(s.equals("end")) && !(s.equals("End"))) {
 
-            setParams(dog1, dog2, cat1);
+           for (Animal setParamAll : allAnimals) {
+               setParams(setParamAll);
+           }
 
+           for (Animal loopAnimal : allAnimals) {
+               printThings(loopAnimal);
+           }
 
-            for (Animal loopAnimal : allAnimals) {
-                printThings(loopAnimal);
-            }
+           System.out.print('\n');
 
-            System.out.print('\n');
+           comp1.compareInter(allAnimals.size(), allAnimals);
 
-            comp1.speedCompIntra(dog2, cat1);
-            comp1.speedCompIntra(dog1, dog2);
-            comp1.speedCompIntra(dog1, cat1);
-            System.out.print('\n');
-            comp1.speedCompInter(dog1, dog2);
+           System.out.print('\n');
+
+           comp1.compareIntra(dogs.size(), dogs);
+           comp1.compareIntra(cats.size(), cats);
 
            System.out.print('\n');
            System.out.print("Type end to end, anything else to restart: ");
@@ -43,39 +61,33 @@ public class AnimalStuff {
        }
     }
 
+
+
     public static void printThings(Animal an) {
         CapitalL cp = new CapitalL();
         System.out.print(cp.capitalizer(an.getName()) + " is " + an.movement().toLowerCase() +
                 " while saying " + an.makeNoise() + '\n');
     }
 
-    public static void setParams(Animal a, Animal b, Animal c) {
+    public static void setParams(Animal a) {
         InputValidation validate = new InputValidation();
         Scanner name = new Scanner(System.in);
 
         a.setParameters();
-        b.setParameters();
-        c.setParameters();
 
         System.out.print("Set name for " + a.getSpecies() + " " + a.getTag() + ": ");
         a.setName(name.nextLine());
         System.out.print("Set speed for " + a.getName() + ": ");
         a.setSpeed(validate.inputValidate());
         System.out.print('\n');
+    }
 
-        System.out.print("Set name for " + b.getSpecies() + " " + b.getTag() + ": ");
-        b.setName(name.nextLine());
-        System.out.print("Set speed for " + b.getName() +  ": ");
-        b.setSpeed(validate.inputValidate());
-        System.out.print('\n');
-
-        System.out.print("Set name for " + c.getSpecies() + " " + c.getTag() + ": ");
-        c.setName(name.nextLine());
-        System.out.print("Set speed for " + c.getName() +  ": ");
-        c.setSpeed(validate.inputValidate());
-        System.out.print('\n');
-
-        System.out.println("");
+    public static ArrayList<Animal> addToAll(ArrayList<Animal> merge) {
+        ArrayList<Animal> all = new ArrayList<Animal>();
+        for (Animal a : merge) {
+            all.add(a);
+        }
+        return all;
     }
 
 }
@@ -157,9 +169,40 @@ class Cat extends Animal {
     }
 }
 
+class Wolf extends Animal {
+    public void setParameters() {
+        setSpeed(0);
+        setSpecies("Wolf");
+    }
+
+    public String makeNoise() {
+        return "Aauuuu";
+    }
+}
+
 class Comparison{
     CapitalL ca = new CapitalL();
+
+    public static void compareIntra(int size, ArrayList<Animal> species) {
+        Comparison comp = new Comparison();
+        for (int c1 = 0; c1 < size; ++c1) {
+            for (int c2 = c1 + 1; c2 < size; ++c2) {
+                comp.speedCompIntra(species.get(c1), species.get(c2));
+            }
+        }
+    }
+
+    public static void compareInter(int sizeAll, ArrayList<Animal> allOfThem) {
+        Comparison comp = new Comparison();
+        for (int c1 = 0; c1 < sizeAll; ++c1) {
+            for (int c2 = c1 + 1; c2 < sizeAll; ++c2) {
+                comp.speedCompIntra(allOfThem.get(c1), allOfThem.get(c2));
+            }
+        }
+    }
+
     public void speedCompIntra(Animal a, Animal b) {
+
         if (a.getSpeed() < b.getSpeed()) {
             System.out.println(ca.capitalizer(a.getName()) + " is slower than " + ca.capitalizer(b.getName()));
         } else if (a.getSpeed() == b.getSpeed()) {
@@ -168,8 +211,6 @@ class Comparison{
             System.out.println(ca.capitalizer(a.getName()) + " is faster than " + ca.capitalizer(b.getName()));
         }
     }
-
-
 
     public void speedCompInter(Animal a, Animal b) {
         if (a.getSpeed() < b.getSpeed()) {
