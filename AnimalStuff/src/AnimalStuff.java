@@ -3,24 +3,26 @@ import java.util.Scanner;
 
 public class AnimalStuff {
     public static void main (String[] args) {
-       Scanner end = new Scanner(System.in);
-       Animal dog1 = new Dog();
-       Animal dog2 = new Dog();
-       Animal cat1 = new Cat();
-       ArrayList<Animal> allAnimals = new ArrayList<Animal>();
-       Comparison comp1 = new Comparison();
+        Scanner end = new Scanner(System.in);
+        Animal dog1 = new Dog();
+        Animal dog2 = new Dog();
+        Animal cat1 = new Cat();
+        ArrayList<Animal> allAnimals = new ArrayList<Animal>();
+        Comparison comp1 = new Comparison();
 
-       dog1.setTag(1);
-       dog2.setTag(2);
-       cat1.setTag(1);
+        allAnimals.add(dog1);
+        allAnimals.add(dog2);
+        allAnimals.add(cat1);
 
-       String s = "";
-       while (!(s.equals("end")) && !(s.equals("End"))) {
+        dog1.setTag(1);
+        dog2.setTag(2);
+        cat1.setTag(1);
+
+        String s = "";
+        while (!(s.equals("end")) && !(s.equals("End"))) {
 
             setParams(dog1, dog2, cat1);
-            allAnimals.add(dog1);
-            allAnimals.add(dog2);
-            allAnimals.add(cat1);
+
 
             for (Animal loopAnimal : allAnimals) {
                 printThings(loopAnimal);
@@ -31,6 +33,8 @@ public class AnimalStuff {
             comp1.speedCompIntra(dog2, cat1);
             comp1.speedCompIntra(dog1, dog2);
             comp1.speedCompIntra(dog1, cat1);
+            System.out.print('\n');
+            comp1.speedCompInter(dog1, dog2);
 
            System.out.print('\n');
            System.out.print("Type end to end, anything else to restart: ");
@@ -79,7 +83,6 @@ abstract class Animal {
     private String name;
     private int tag;
 
-    abstract public void setParameters();
 
     public void setSpeed(int s) {
         speed = s;
@@ -88,8 +91,6 @@ abstract class Animal {
     public int getSpeed() {
         return speed;
     }
-
-    abstract public String makeNoise();
 
     public String getSpecies() {
         return species;
@@ -114,6 +115,10 @@ abstract class Animal {
     public int getTag() {
         return tag;
     }
+
+    abstract public String makeNoise();
+
+    abstract public void setParameters();
 
     public String movement() {
         if (speed <= 0) {
@@ -162,11 +167,14 @@ class Comparison{
 
     public void speedCompInter(Animal a, Animal b) {
         if (a.getSpeed() < b.getSpeed()) {
-            System.out.println(a.getSpecies() + " is slower than " + b.getSpecies());
+            System.out.println(a.getSpecies() + " " + a.getTag() + " is slower than " + b.getSpecies()+ " " +
+                    b.getTag());
         } else if (a.getSpeed() == b.getSpeed()) {
-            System.out.println(a.getSpecies() + " is the same speed as " + b.getSpecies());
+            System.out.println(a.getSpecies() + " " + a.getTag() + " is the same speed as " + b.getSpecies() + " " +
+                    b.getTag());
         } else {
-            System.out.println(a.getSpecies() + " is faster than " + b.getSpecies());
+            System.out.println(a.getSpecies() + " " + a.getTag() + " is faster than " + b.getSpecies()+ " " +
+                    b.getTag());
         }
     }
 }
