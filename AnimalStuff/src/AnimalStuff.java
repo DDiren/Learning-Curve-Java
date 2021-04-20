@@ -1,39 +1,36 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class AnimalStuff {
     public static void main (String[] args) {
         Scanner end = new Scanner(System.in);
-        Animal dog1 = new Dog();
-        Animal dog2 = new Dog();
-        Animal cat1 = new Cat();
-        Animal cat2 = new Cat();
-        Animal wolf1 = new Wolf();
+        Animal dog1 = new Dog();                //To add new animal, create an animal referenced object,
+        Animal dog2 = new Dog();                //create an array for that animal's species
+        Animal cat1 = new Cat();                //add that array to the allAnimals array list
+        Animal cat2 = new Cat();                //use the tag setter function for that species
+        Animal wolf1 = new Wolf();              //and the animal will be added to the program.
         Animal wolf2 = new Wolf();
+        Animal turtle1 = new Turtle();
+        Animal turtle2 = new Turtle();
         ArrayList<Animal> allAnimals = new ArrayList<Animal>();
-        ArrayList<Animal> dogs = new ArrayList<Animal>();
-        ArrayList<Animal> cats = new ArrayList<Animal>();
-        ArrayList<Animal> wolves = new ArrayList<Animal>();
+        Animal[] dogs = {dog1, dog2};
+        Animal[] cats = {cat1, cat2};
+        Animal[] wolves = {wolf1, wolf2};
+        Animal[] turtles = {turtle1, turtle2};
         Comparison comp1 = new Comparison();
 
-        dogs.add(dog1);
-        dogs.add(dog2);
-        cats.add(cat1);
-        cats.add(cat2);
-        wolves.add(wolf1);
-        wolves.add(wolf2);
+        allAnimals.addAll(Arrays.asList(dogs));
+        allAnimals.addAll(Arrays.asList(cats));
+        allAnimals.addAll(Arrays.asList(wolves));
+        allAnimals.addAll(Arrays.asList(turtles));
 
-        allAnimals.addAll(dogs);
-        allAnimals.addAll(cats);
-        allAnimals.addAll(wolves);
+        tagSetter(dogs);
+        tagSetter(cats);
+        tagSetter(wolves);
+        tagSetter(turtles);
 
-        dog1.setTag(1);
-        dog2.setTag(2);
-        cat1.setTag(1);
-        cat2.setTag(2);
-        wolf1.setTag(1);
-        wolf2.setTag(2);
-
+        System.out.println(allAnimals);
         String s = "";
         while (!(s.equals("end")) && !(s.equals("End"))) {
 
@@ -51,8 +48,10 @@ public class AnimalStuff {
 
            System.out.print('\n');
 
-           comp1.compareIntra(dogs.size(), dogs);
-           comp1.compareIntra(cats.size(), cats);
+           comp1.compareIntra(dogs.length, dogs);
+           comp1.compareIntra(cats.length, cats);
+           comp1.compareIntra(wolves.length, wolves);
+           comp1.compareIntra(turtles.length, turtles);
 
            System.out.print('\n');
            System.out.print("Type end to end, anything else to restart: ");
@@ -61,7 +60,12 @@ public class AnimalStuff {
        }
     }
 
-
+    public static void tagSetter(Animal[] as) {
+        for (int c = 0; c < as.length; ++c) {
+            Animal sa = as[c];
+            sa.setTag(c + 1); //c+1 bc arrays start at 0, but the first obj is an animal, so it exists. cant be 0, so 1
+        }
+    }
 
     public static void printThings(Animal an) {
         CapitalL cp = new CapitalL();
@@ -82,7 +86,7 @@ public class AnimalStuff {
         System.out.print('\n');
     }
 
-    public static ArrayList<Animal> addToAll(ArrayList<Animal> merge) {
+    public static ArrayList<Animal> addToAll(Animal[] merge) {
         ArrayList<Animal> all = new ArrayList<Animal>();
         for (Animal a : merge) {
             all.add(a);
@@ -180,14 +184,36 @@ class Wolf extends Animal {
     }
 }
 
+class Turtle extends Animal {
+
+    public void setParameters() {
+        setSpeed(0);
+        setSpecies("Turtle");
+    }
+
+    public String makeNoise() {
+        return "absolutely nothing";
+    }
+
+    public String movement() {
+        if (getSpeed() <= 0) {
+            return "Standing";
+        } else if (getSpeed() <= 5) {
+            return "Walking";
+        } else {
+            return "Running";
+        }
+    }
+}
+
 class Comparison{
     CapitalL ca = new CapitalL();
 
-    public static void compareIntra(int size, ArrayList<Animal> species) {
+    public static void compareIntra(int size, Animal[] species) {
         Comparison comp = new Comparison();
         for (int c1 = 0; c1 < size; ++c1) {
             for (int c2 = c1 + 1; c2 < size; ++c2) {
-                comp.speedCompIntra(species.get(c1), species.get(c2));
+                comp.speedCompIntra(species[c1], species[c2]);
             }
         }
     }
