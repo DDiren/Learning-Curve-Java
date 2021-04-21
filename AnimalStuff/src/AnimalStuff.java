@@ -3,7 +3,14 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class AnimalStuff {
-    public static void main (String[] args) {
+    public static void main(String[] args) {
+        AnimalBehaviour animalBehaviour = new AnimalBehaviour();
+        animalBehaviour.start();
+    }
+}
+
+class AnimalBehaviour {
+    public void start() {
         Scanner end = new Scanner(System.in);
         Animal dog1 = new Dog();                //To add new animal, create an animal referenced object,
         Animal dog2 = new Dog();                //create an array for that animal's species
@@ -34,50 +41,48 @@ public class AnimalStuff {
         String s = "";
         while (!(s.equals("end")) && !(s.equals("End"))) {
 
-           for (Animal setParamAll : allAnimals) {
-               setParams(setParamAll);
-           }
+            for (Animal setParamAll : allAnimals) {
+                setParams(setParamAll);
+            }
 
-           for (Animal loopAnimal : allAnimals) {
-               printThings(loopAnimal);
-           }
+            for (Animal loopAnimal : allAnimals) {
+                printThings(loopAnimal);
+            }
 
-           System.out.print('\n');
+            System.out.print('\n');
 
-           comp1.compareInter(allAnimals.size(), allAnimals);
+            comp1.compareInter(allAnimals.size(), allAnimals);
 
-           System.out.print('\n');
+            System.out.print('\n');
 
-           comp1.compareIntra(dogs.length, dogs);
-           comp1.compareIntra(cats.length, cats);
-           comp1.compareIntra(wolves.length, wolves);
-           comp1.compareIntra(turtles.length, turtles);
+            comp1.compareIntra(dogs.length, dogs);
+            comp1.compareIntra(cats.length, cats);
+            comp1.compareIntra(wolves.length, wolves);
+            comp1.compareIntra(turtles.length, turtles);
 
-           System.out.print('\n');
-           System.out.print("Type end to end, anything else to restart: ");
-           s = end.nextLine();
-           System.out.print('\n');
-       }
+            System.out.print('\n');
+            System.out.print("Type end to end, anything else to restart: ");
+            s = end.nextLine();
+            System.out.print('\n');
+        }
     }
 
-    public static void tagSetter(Animal[] as) {
+    public void tagSetter(Animal[] as) {
         for (int c = 0; c < as.length; ++c) {
             Animal sa = as[c];
             sa.setTag(c + 1); //c+1 bc arrays start at 0, but the first obj is an animal, so it exists. cant be 0, so 1
         }
     }
 
-    public static void printThings(Animal an) {
+    public void printThings(Animal an) {
         CapitalL cp = new CapitalL();
         System.out.print(cp.capitalizer(an.getName()) + " is " + an.movement().toLowerCase() +
                 " while saying " + an.makeNoise() + '\n');
     }
 
-    public static void setParams(Animal a) {
+    public void setParams(Animal a) {
         InputValidation validate = new InputValidation();
         Scanner name = new Scanner(System.in);
-
-        a.setParameters();
 
         System.out.print("Set name for " + a.getSpecies() + " " + a.getTag() + ": ");
         a.setName(name.nextLine());
@@ -86,14 +91,13 @@ public class AnimalStuff {
         System.out.print('\n');
     }
 
-    public static ArrayList<Animal> addToAll(Animal[] merge) {
+    public ArrayList<Animal> addToAll(Animal[] merge) {
         ArrayList<Animal> all = new ArrayList<Animal>();
         for (Animal a : merge) {
             all.add(a);
         }
         return all;
     }
-
 }
 
 abstract class Animal {
@@ -101,7 +105,12 @@ abstract class Animal {
     private String species;
     private String name;
     private int tag;
+    private int walk_and_run_transition;
 
+    Animal() {
+        speed = 0;
+        walk_and_run_transition = 20;
+    }
 
     public void setSpeed(int s) {
         speed = s;
@@ -135,14 +144,16 @@ abstract class Animal {
         return tag;
     }
 
+    public void setWalk_and_run_transition(int wart) { walk_and_run_transition = wart; };
+
+    public int getWalk_and_run_transition() { return walk_and_run_transition; }
+
     abstract public String makeNoise();
 
-    abstract public void setParameters();
-
     public String movement() {
-        if (speed <= 0) {
+        if (getSpeed() <= 0) {
             return "Standing";
-        } else if (speed <= 20) {
+        } else if (getSpeed() <= walk_and_run_transition) {
             return "Walking";
         } else {
             return "Running";
@@ -152,8 +163,7 @@ abstract class Animal {
 
 class Dog extends Animal {
 
-    public void setParameters() {
-        setSpeed(0);
+    Dog() {
         setSpecies("Dog");
     }
 
@@ -163,9 +173,8 @@ class Dog extends Animal {
 }
 
 class Cat extends Animal {
-    public void setParameters() {
-        setSpeed(0);
-        setSpecies("Cat");
+    Cat() {
+        setSpecies("cat");
     }
 
     public String makeNoise() {
@@ -174,8 +183,7 @@ class Cat extends Animal {
 }
 
 class Wolf extends Animal {
-    public void setParameters() {
-        setSpeed(0);
+    Wolf() {
         setSpecies("Wolf");
     }
 
@@ -186,23 +194,13 @@ class Wolf extends Animal {
 
 class Turtle extends Animal {
 
-    public void setParameters() {
-        setSpeed(0);
+    Turtle() {
         setSpecies("Turtle");
+        setWalk_and_run_transition(5);
     }
 
     public String makeNoise() {
         return "absolutely nothing";
-    }
-
-    public String movement() {
-        if (getSpeed() <= 0) {
-            return "Standing";
-        } else if (getSpeed() <= 5) {
-            return "Walking";
-        } else {
-            return "Running";
-        }
     }
 }
 
